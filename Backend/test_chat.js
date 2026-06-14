@@ -4,10 +4,10 @@ async function testChat() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
       productId: 'd3e97adf-eedb-413b-a2bb-9f450aa29c1e',
-      message: 'My horn is broken'
+      message: 'My horn is not working what should I do'
     })
   });
   const data = await res.json();
-  console.log(data);
+  console.log(JSON.stringify(data, null, 2));
 }
 testChat();

@@ -1,38 +1,62 @@
 import sys
 import json
 import os
+import asyncio
 import traceback
 
 try:
     from moss import MossClient, DocumentInfo
 except ImportError:
-    print(json.dumps({"error": "inferedge-moss not installed globally or accessible"}))
+    print(json.dumps({"error": "inferedge-moss not installed globally or accessible"}), flush=True)
     sys.exit(1)
 
 PROJECT_ID = os.getenv("MOSS_PROJECT_ID")
 PROJECT_KEY = os.getenv("MOSS_PROJECT_KEY")
 
 if not PROJECT_ID or not PROJECT_KEY:
-    print(json.dumps({"error": "Missing MOSS credentials in environment"}))
+    print(json.dumps({"error": "Missing MOSS credentials in environment"}), flush=True)
     sys.exit(1)
 
 try:
     client = MossClient(project_id=PROJECT_ID, project_key=PROJECT_KEY)
 except Exception as e:
-    print(json.dumps({"error": f"Failed to initialize MossClient: {str(e)}"}))
+    print(json.dumps({"error": f"Failed to initialize MossClient: {str(e)}"}), flush=True)
     sys.exit(1)
 
-def upload_chunks(index_name, chunks):
+loaded_indexes = set()
+
+async def upload_chunks(index_name, chunks):
     try:
-        docs = [DocumentInfo(id=str(i), text=c) for i, c in enumerate(chunks)]
-        client.add_docs(name=index_name, docs=docs)
+        cleaned_chunks = []
+        for c in chunks:
+            cleaned = c.encode('utf-8', 'ignore').decode('utf-8')
+            cleaned_chunks.append(cleaned)
+        docs = [DocumentInfo(id=str(i), text=c) for i, c in enumerate(cleaned_chunks)]
+        
+        try:
+            await client.create_index(name=index_name, docs=docs)
+        except Exception as create_err:
+            err_msg = str(create_err).lower()
+            if 'already exists' in err_msg or 'duplicate' in err_msg:
+                await client.add_docs(name=index_name, docs=docs)
+            else:
+                raise create_err
+        
+        loaded_indexes.add(index_name)
         return {"status": "success", "indexed": len(chunks)}
     except Exception as e:
         return {"error": f"Moss upload error: {str(e)}"}
 
-def search_moss(index_name, query):
+async def search_moss(index_name, query):
     try:
-        results = client.query(name=index_name, query=query)
+        if index_name not in loaded_indexes:
+            try:
+                await client.load_index(name=index_name)
+                loaded_indexes.add(index_name)
+            except Exception:
+                pass
+        
+        results = await client.query(name=index_name, query=query)
         texts = []
         if hasattr(results, 'docs'):
             for d in results.docs:
@@ -41,27 +65,35 @@ def search_moss(index_name, query):
     except Exception as e:
         return {"error": f"Moss query error: {str(e)}"}
 
+def main():
+    print(json.dumps({"status": "ready"}), flush=True)
+    
+    while True:
+        try:
+            line = sys.stdin.readline()
+            if not line:
+                break
+            
+            line_str = line.strip()
+            if not line_str:
+                continue
+            
+            data = json.loads(line_str)
+            command = data.get("command")
+            
+            if command == "upload":
+                res = asyncio.run(upload_chunks(data.get("index_name"), data.get("chunks", [])))
+            elif command == "search":
+                res = asyncio.run(search_moss(data.get("index_name"), data.get("query")))
+            elif command == "ping":
+                res = {"status": "pong"}
+            else:
+                res = {"error": f"Unknown command: {command}"}
+            
+            print(json.dumps(res), flush=True)
+            
+        except Exception as e:
+            print(json.dumps({"error": f"Worker error: {str(e)}\n{traceback.format_exc()}"}), flush=True)
+
 if __name__ == "__main__":
-    try:
-        command = sys.argv[1]
-        input_data = sys.stdin.read()
-        
-        if not input_data.strip():
-            print(json.dumps({"error": "No input provided"}))
-            sys.exit(1)
-            
-        data = json.loads(input_data)
-        
-        if command == "upload":
-            res = upload_chunks(data.get("index_name"), data.get("chunks", []))
-            print(json.dumps(res))
-            
-        elif command == "search":
-            res = search_moss(data.get("index_name"), data.get("query"))
-            print(json.dumps(res))
-            
-        else:
-            print(json.dumps({"error": "Unknown command"}))
-            
-    except Exception as e:
-        print(json.dumps({"error": f"Worker crash: {str(e)}\n{traceback.format_exc()}"}))
+    main()

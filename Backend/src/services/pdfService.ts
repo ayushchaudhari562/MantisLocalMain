@@ -1,11 +1,9 @@
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-const pdfParse = require('pdf-parse');
+import pdfParse from 'pdf-parse/lib/pdf-parse.js';
 
 export const extractTextFromBuffer = async (buffer) => {
   try {
     const data = await pdfParse(buffer);
-    return data.text;
+    return data.text ? data.text.replace(/[\uD800-\uDFFF]/g, '') : '';
   } catch (error) {
     throw new Error(`Failed to parse PDF: ${error.message}`);
   }
