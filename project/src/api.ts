@@ -21,4 +21,20 @@ export const getProducts = async (companyId?: string) => {
   return response.data;
 };
 
+// Example: Fetch a specific product
+export const getProduct = async (id: string) => {
+  const response = await api.get(`/products/${id}`);
+  return response.data;
+};
+
+// Send chat message
+export const sendChatMessage = async (productId: string, message: string, sessionId?: string | null) => {
+  const response = await api.post('/chat', {
+    productId,
+    message,
+    sessionId
+  });
+  return response.data;
+};
+
 export default api;

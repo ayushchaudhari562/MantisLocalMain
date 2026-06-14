@@ -1,5 +1,6 @@
-import pdfParsePkg from 'pdf-parse';
-const pdfParse = pdfParsePkg.default || pdfParsePkg;
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const pdfParse = require('pdf-parse');
 
 export const extractTextFromBuffer = async (buffer) => {
   try {
