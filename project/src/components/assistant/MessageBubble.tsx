@@ -1,38 +1,33 @@
 // components/assistant/MessageBubble.tsx
 
 type MessageBubbleProps = {
-message: string;
-sender: "user" | "assistant";
+  message: string;
+  sender: "user" | "assistant";
 };
 
 function MessageBubble({
-message,
-sender,
+  message,
+  sender,
 }: MessageBubbleProps) {
-const isUser = sender === "user";
+  const isUser = sender === "user";
 
-return (
-<div
-className={`flex ${
+  return (
+    <div
+      className={`flex w-full ${
         isUser ? "justify-end" : "justify-start"
       }`}
->
-
-
-  <div
-    className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm ${
-      isUser
-        ? "rounded-br-md bg-[#111315] text-white"
-        : "rounded-bl-md border border-[#E4E7EB] bg-[#F8F9FA] text-[#3B434C]"
-    }`}
-  >
-    {message}
-  </div>
-
-</div>
-
-
-);
+    >
+      <div
+        className={`max-w-[85%] px-5 py-3 text-[14px] leading-relaxed ${
+          isUser
+            ? "rounded-2xl rounded-br-sm bg-[#111315] text-white"
+            : "rounded-2xl rounded-bl-sm border border-[#60758A]/10 bg-white text-[#111315] shadow-soft-sm"
+        }`}
+      >
+        {message}
+      </div>
+    </div>
+  );
 }
 
 export default MessageBubble;

@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { getProducts } from "../api";
+
 import { getProduct } from "../api";
 import Navbar from "../components/layout/Navbar";
 import ChatWindow from "../components/assistant/Chatwindow";
@@ -14,6 +16,7 @@ function ProductDetail() {
 
   useEffect(() => {
     if (id) {
+      getProducts(id).then(res => setProduct(res.data)).catch(console.error);
       getProduct(id).then(res => setProduct(res.data)).catch(console.error);
     }
   }, [id]);

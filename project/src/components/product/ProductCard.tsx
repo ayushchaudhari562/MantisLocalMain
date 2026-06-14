@@ -1,92 +1,53 @@
 // components/products/ProductCard.tsx
-
-import { ArrowUpRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
 type ProductCardProps = {
-id: number;
-name: string;
-category: string;
-docs: number;
-image: string;
+  id: number;
+  name: string;
+  category: string;
+  docs: number;
+  image: string;
 };
 
-function ProductCard({
-id,
-name,
-category,
-docs,
-image,
-}: ProductCardProps) {
-return (
-<Link
-to={`/products/${id}`}
-className="group overflow-hidden rounded-[28px] border border-[#E4E7EB] bg-white transition hover:-translate-y-1 hover:shadow-xl"
->
+function ProductCard({ id, name, category, docs, image }: ProductCardProps) {
+  return (
+    <Link
+      to={`/products/${id}`}
+      className="group overflow-hidden rounded-xl border border-[#E2E5E9] bg-white transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(17,19,21,0.07)]"
+    >
+      {/* Image */}
+      <div className="h-[148px] overflow-hidden bg-[#F3F5F7]">
+        <img
+          src={image}
+          alt={name}
+          className="h-full w-full object-cover transition duration-400 group-hover:scale-[1.03]"
+        />
+      </div>
 
-
-  {/* Image */}
-  <div className="relative h-[260px] overflow-hidden">
-
-    <img
-      src={image}
-      alt={name}
-      className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
-    />
-
-    {/* Overlay */}
-    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-
-    {/* Badge */}
-    <div className="absolute left-4 top-4 rounded-full border border-white/20 bg-white/20 px-3 py-1 text-xs font-medium text-white backdrop-blur-md">
-
-      AI Diagnostics
-
-    </div>
-
-  </div>
-
-  {/* Content */}
-  <div className="p-6">
-
-    <div className="flex items-start justify-between gap-4">
-
-      <div>
-
-        <p className="text-sm text-[#7A8796]">
+      {/* Body */}
+      <div className="px-4 pt-3.5">
+        <p className="text-[11px] tracking-[0.01em] text-[#60758A]">
           {category}
         </p>
-
-        <h3 className="mt-2 text-2xl font-semibold tracking-tight text-[#111315]">
+        <h3 className="mt-1.5 text-[15px] font-medium leading-snug text-[#111315]">
           {name}
         </h3>
-
       </div>
 
-      <div className="flex h-10 w-10 items-center justify-center rounded-full border border-[#E4E7EB] bg-[#F8F9FA] transition group-hover:bg-[#111315]">
-
-        <ArrowUpRight className="h-4 w-4 text-[#111315] transition group-hover:text-white" />
-
+      {/* Footer */}
+      <div className="mt-3.5 flex items-center justify-between border-t border-[#F0F2F4] px-4 py-2.5">
+        <span className="text-[11.5px] text-[#60758A]">{docs} resources</span>
+        <div className="flex items-center gap-2">
+          <span className="rounded bg-[#E6F1FB] px-1.5 py-0.5 text-[10.5px] font-medium text-[#0C447C]">
+            AI support
+          </span>
+          <button className="rounded border border-[#D8DCE2] bg-[#d7e6f4] px-2.5 py-1 text-[11.5px] font-medium text-[#111315] transition hover:bg-[#E6E9EC]">
+            Open
+          </button>
+        </div>
       </div>
-
-    </div>
-
-    <div className="mt-6 flex items-center justify-between border-t border-[#ECEFF3] pt-5">
-
-      <p className="text-sm text-[#5F6772]">
-        {docs} Support Resources
-      </p>
-
-      <div className="h-2 w-2 rounded-full bg-[#7A8796]" />
-
-    </div>
-
-  </div>
-
-</Link>
-
-
-);
+    </Link>
+  );
 }
 
 export default ProductCard;

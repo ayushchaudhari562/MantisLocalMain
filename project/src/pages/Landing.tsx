@@ -1,198 +1,85 @@
 // pages/Landing.tsx
-
 import Navbar from "../components/layout/Navbar";
 import StatsStrip from "../components/landing/Stats";
 import CTASection from "../components/landing/CTASection";
 import Footer from "../components/layout/Footer";
 
 function Landing() {
-return ( <div className="min-h-screen overflow-hidden bg-[#F3F5F7] text-[#111315]">
+  return (
+    <div className="min-h-screen bg-[#F3F5F7] text-[#111315]">
+      <Navbar />
 
+      {/* HERO */}
+      <section className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-16 px-6 py-20 lg:grid-cols-2 lg:py-24">
 
-  <Navbar />
+        {/* Left */}
+        <div>
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#60758A]/20 bg-white px-3.5 py-1.5 text-xs text-[#60758A]">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#60758A]" />
+            AI product diagnostics
+          </div>
 
-  {/* HERO */}
-  <section className="relative overflow-hidden">
+          <h1 className="text-[2.6rem] font-medium leading-[1.08] tracking-tight text-[#111315] lg:text-5xl">
+            AI assistant for<br />
+            diagnosing product<br />
+            <span className="text-[#60758A]">problems.</span>
+          </h1>
 
-    {/* Ambient Background */}
-    <div className="absolute inset-0 overflow-hidden">
+          <p className="mt-5 max-w-md text-[15px] leading-relaxed text-[#60758A]">
+            Describe an issue. The assistant checks manuals and documentation to give you a clear answer.
+          </p>
 
-      <div className="absolute left-[-10%] top-[-10%] h-[520px] w-[520px] rounded-full bg-[#D6E2F0] blur-3xl" />
-
-      <div className="absolute bottom-[-20%] right-[-10%] h-[520px] w-[520px] rounded-full bg-[#E4EBF3] blur-3xl" />
-
-    </div>
-
-    {/* Grid */}
-    <div
-      className="absolute inset-0 opacity-[0.25]"
-      style={{
-        backgroundImage:
-          "linear-gradient(rgba(17,19,21,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(17,19,21,0.03) 1px, transparent 1px)",
-        backgroundSize: "70px 70px",
-      }}
-    />
-
-    <div className="relative z-10 mx-auto grid min-h-[92vh] max-w-7xl grid-cols-1 items-center gap-20 px-6 py-16 lg:grid-cols-2">
-
-      {/* LEFT */}
-      <div>
-
-        {/* Badge */}
-        <div className="inline-flex items-center gap-2 rounded-full border border-[#D8DCE2] bg-white/80 px-4 py-2 text-sm text-[#5F6772] shadow-sm backdrop-blur-md">
-
-          <div className="h-2 w-2 rounded-full bg-[#7A8796]" />
-
-          AI Powered Product Diagnostics
-
+          <div className="mt-8 flex flex-wrap gap-3">
+            <button className="rounded-xl bg-[#111315] px-6 py-3 text-sm font-medium text-white transition shadow-soft-sm hover:bg-black/80">
+              Start diagnosis
+            </button>
+            <button className="rounded-xl border border-[#60758A]/20 bg-white px-6 py-3 text-sm font-medium text-[#111315] transition shadow-soft-sm hover:bg-[#F3F5F7]">
+              Check manuals
+            </button>
+          </div>
         </div>
 
-        {/* Heading */}
-        <h1 className="mt-8 text-6xl font-semibold leading-[1.02] tracking-tight text-[#111315] lg:text-7xl">
-
-          Diagnose Products
-          <br />
-
-          <span className="text-[#60758A]">
-            Like a Technician.
-          </span>
-
-        </h1>
-
-        {/* Description */}
-        <p className="mt-8 max-w-2xl text-lg leading-relaxed text-[#5F6772]">
-
-          Intelligent product support trained on official manuals,
-          troubleshooting workflows, technical documentation,
-          and service resources for real-world devices.
-
-        </p>
-
-        {/* Buttons */}
-        <div className="mt-10 flex flex-wrap gap-4">
-
-          <button className="rounded-full bg-[#111315] px-7 py-3 text-sm font-medium text-white transition hover:bg-[#1B1D21]">
-
-            Start Diagnosis
-
-          </button>
-
-          <button className="rounded-full border border-[#D8DCE2] bg-white px-7 py-3 text-sm font-medium text-[#111315] shadow-sm transition hover:bg-[#EEF2F5]">
-
-            Explore Products
-
-          </button>
-
-        </div>
-
-      </div>
-
-      {/* RIGHT SIDE */}
-      <div className="relative flex items-center justify-center">
-
-        {/* Glow */}
-        <div className="absolute h-[520px] w-[520px] rounded-full bg-[#D9E5F1]/70 blur-3xl" />
-
-        {/* Main Diagnostic Window */}
-        <div className="relative w-full max-w-xl overflow-hidden rounded-[36px] border border-[#D8DCE2] bg-white/90 shadow-[0_20px_80px_rgba(15,23,42,0.08)] backdrop-blur-2xl">
+        {/* Right — Chat preview */}
+        <div className="w-full max-w-lg rounded-3xl border border-[#60758A]/10 bg-white shadow-soft lg:ml-auto">
 
           {/* Header */}
-          <div className="flex items-center justify-between border-b border-[#ECEFF3] px-6 py-5">
-
+          <div className="flex items-center justify-between border-b border-[#F3F5F7] px-6 py-5">
             <div>
-
-              <p className="text-sm text-[#5F6772]">
-                Active Diagnostic Session
-              </p>
-
-              <h3 className="mt-1 text-xl font-semibold text-[#111315]">
-                Honda Activa 6G
-              </h3>
-
+              <p className="text-[14px] font-medium text-[#111315]">Honda Activa 6G</p>
+              <p className="mt-0.5 text-[13px] text-[#60758A]">Active session</p>
             </div>
-
-            <div className="rounded-full border border-[#D8DCE2] bg-[#F8FAFC] px-3 py-1 text-xs font-medium text-[#60758A]">
-
-              LIVE
-
-            </div>
-
+            <span className="rounded-full border border-[#60758A]/20 bg-[#F3F5F7] px-3 py-1 text-[11px] font-medium text-[#60758A]">
+              Live
+            </span>
           </div>
 
-          {/* Chat */}
-          <div className="space-y-4 px-6 py-6">
-
-            {/* User */}
-            <div className="ml-auto max-w-[80%] rounded-2xl rounded-br-md bg-[#111315] px-4 py-3 text-sm text-white shadow-sm">
-
+          {/* Messages */}
+          <div className="flex flex-col gap-4 px-6 py-6 bg-[#F3F5F7]/30">
+            <div className="ml-auto max-w-[80%] rounded-2xl rounded-br-sm bg-[#111315] px-5 py-3 text-[14px] leading-relaxed text-white">
               My scooter horn is not working.
-
             </div>
-
-            {/* AI */}
-            <div className="max-w-[85%] rounded-2xl rounded-bl-md border border-[#E4E7EB] bg-[#F7F9FB] px-4 py-3 text-sm leading-relaxed text-[#3B434C]">
-
-              Does the headlight function normally when the ignition is on?
-
+            <div className="max-w-[85%] rounded-2xl rounded-bl-sm border border-[#60758A]/10 bg-white px-5 py-3 text-[14px] leading-relaxed text-[#111315] shadow-soft-sm">
+              Check Fuse F3 (10A) under the front panel — it controls the horn relay.
             </div>
-
-            {/* User */}
-            <div className="ml-auto max-w-[80%] rounded-2xl rounded-br-md bg-[#111315] px-4 py-3 text-sm text-white shadow-sm">
-
-              Yes, headlights are working properly.
-
-            </div>
-
-            {/* AI */}
-            <div className="max-w-[85%] rounded-2xl rounded-bl-md border border-[#E4E7EB] bg-[#F7F9FB] px-4 py-3 text-sm leading-relaxed text-[#3B434C]">
-
-              Understood. The issue appears isolated to the horn circuit.
-              Please inspect Fuse F3 (10A) beneath the front panel.
-
-            </div>
-
           </div>
 
-          {/* Bottom */}
-          <div className="border-t border-[#ECEFF3] bg-[#FCFCFD] px-6 py-5">
-
-            <div className="flex items-center gap-3">
-
-              <div className="flex-1 rounded-full border border-[#D8DCE2] bg-white px-5 py-3 text-sm text-[#7A8796]">
-
-                Describe your issue...
-
-              </div>
-
-              <button className="rounded-full bg-[#111315] px-5 py-3 text-sm font-medium text-white transition hover:bg-[#1B1D21]">
-
-                Send
-
-              </button>
-
+          {/* Input */}
+          <div className="flex gap-3 border-t border-[#F3F5F7] px-6 py-5">
+            <div className="flex-1 rounded-xl border border-[#60758A]/20 bg-[#F3F5F7] px-4 py-3 text-[14px] text-[#60758A]">
+              Describe your issue…
             </div>
-
+            <button className="rounded-xl bg-[#111315] px-5 py-3 text-[14px] font-medium text-white transition hover:bg-black/80">
+              Send
+            </button>
           </div>
-
         </div>
+      </section>
 
-      </div>
-
+      <StatsStrip />
+      <CTASection />
+      <Footer />
     </div>
-
-  </section>
-
-  {/* SIMPLE STRUCTURE */}
-  <StatsStrip />
-
-  <CTASection />
-
-  <Footer />
-
-</div>
-
-
-);
+  );
 }
 
 export default Landing;

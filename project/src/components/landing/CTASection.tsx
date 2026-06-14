@@ -1,67 +1,65 @@
 // components/landing/CTASection.tsx
 
 import { ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 function CTASection() {
-return ( <section className="relative overflow-hidden border-t border-[#E4E7EB] bg-[#F8F9FA] py-32">
+  return (
+    <section className="relative overflow-hidden border-t border-[#60758A]/10 bg-[#F3F5F7] py-24">
 
+      <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
 
-  {/* Ambient Background */}
-  <div className="absolute inset-0">
+        <p className="text-[13px] font-semibold uppercase tracking-widest text-[#60758A]">
+          Start Diagnosing
+        </p>
 
-    <div className="absolute left-[15%] top-[10%] h-[300px] w-[300px] rounded-full bg-[#E6EAEE] blur-3xl" />
+        <h2 className="mt-6 text-4xl font-semibold tracking-tight text-[#111315] lg:text-6xl">
 
-    <div className="absolute bottom-[5%] right-[10%] h-[300px] w-[300px] rounded-full bg-[#EEF1F4] blur-3xl" />
+          Find product issues
+          <br />
+          instantly.
 
-  </div>
+        </h2>
 
-  <div className="relative z-10 mx-auto max-w-5xl px-6 text-center">
+        <p className="mx-auto mt-6 max-w-2xl text-[16px] leading-relaxed text-[#60758A]">
 
-    <p className="text-sm font-medium uppercase tracking-[0.2em] text-[#7A8796]">
-      Intelligent Product Support
-    </p>
+          Transform manuals, service guides,
+          and technical documentation into an intelligent
+          diagnostic experience.
 
-    <h2 className="mt-6 text-5xl font-semibold tracking-tight text-[#111315] lg:text-7xl">
+        </p>
 
-      Support Should
-      <br />
-      Feel Intelligent.
+        {/* Buttons */}
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
 
-    </h2>
+          {/* Start Diagnosis */}
+          <Link
+            to="/products"
+            className="flex items-center gap-2 rounded-xl bg-[#111315] px-8 py-4 text-[15px] font-medium text-white shadow-sm transition hover:bg-black/80"
+          >
 
-    <p className="mx-auto mt-8 max-w-3xl text-lg leading-relaxed text-[#5F6772]">
+            Start Diagnosis
 
-      Transform manuals, service guides,
-      and technical documentation into an intelligent
-      diagnostic experience powered by AI.
+            <ArrowRight className="h-5 w-5" />
 
-    </p>
+          </Link>
 
-    {/* Buttons */}
-    <div className="mt-12 flex flex-wrap items-center justify-center gap-4">
+          {/* Explore Products */}
+          <Link
+            to="/products"
+            className="rounded-xl border border-[#60758A]/20 bg-white px-8 py-4 text-[15px] font-medium text-[#111315] shadow-sm transition hover:bg-[#EEF2F5]"
+          >
 
-      <button className="flex items-center gap-2 rounded-full bg-[#111315] px-7 py-3 text-sm font-medium text-white transition hover:bg-[#1B1D21]">
+            Explore Products
 
-        Start Diagnosis
+          </Link>
 
-        <ArrowRight className="h-4 w-4" />
+        </div>
 
-      </button>
+      </div>
 
-      <button className="rounded-full border border-[#D8DCE2] bg-white px-7 py-3 text-sm font-medium text-[#111315] shadow-sm transition hover:bg-[#F0F2F4]">
-
-        Explore Products
-
-      </button>
-
-    </div>
-
-  </div>
-
-</section>
-
-
-);
+    </section>
+  );
 }
 
 export default CTASection;
