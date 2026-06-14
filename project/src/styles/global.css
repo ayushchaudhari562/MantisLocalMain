@@ -2,39 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #050816;
-  --card: #0b1220;
-  --border: rgba(255, 255, 255, 0.08);
+/* Base reset and typography */
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-  --blue: #3b82f6;
-  --cyan: #22d3ee;
-  --purple: #8b5cf6;
-
-  --text: #e5e7eb;
-  --muted: #94a3b8;
+  html,
+  body,
+  #root {
+    width: 100%;
+    min-height: 100vh;
+    background: #F3F5F7;
+    color: #111315;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html,
-body,
-#root {
-  width: 100%;
-  min-height: 100%;
-  background: var(--background);
-  color: var(--text);
-  font-family: Inter, sans-serif;
-  overflow-x: hidden;
-}
-
-body {
-  background:
-    radial-gradient(circle at top left, rgba(59,130,246,0.15), transparent 25%),
-    radial-gradient(circle at bottom right, rgba(139,92,246,0.12), transparent 25%),
-    #050816;
+/* Premium scrollbar styles */
+@layer utilities {
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 4px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: rgba(96, 117, 138, 0.2);
+    border-radius: 100px;
+  }
 }

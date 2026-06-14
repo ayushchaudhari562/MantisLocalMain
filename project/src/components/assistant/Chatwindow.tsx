@@ -1,4 +1,4 @@
-// components/assistant/ChatWindow.tsx
+// Embedded chat assistant panel for product detail page
 
 import { useState } from "react";
 import MessageBubble from "./MessageBubble";

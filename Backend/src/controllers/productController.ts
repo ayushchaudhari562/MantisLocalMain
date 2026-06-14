@@ -25,6 +25,25 @@ export const getProducts = async (req, res, next) => {
   }
 };
 
+// Get resources for product
+export const getProductResources = async (req, res, next) => {
+  try {
+
+    const { id } = req.params;
+
+    const resources =
+      await productService.getProductResources(id);
+
+    res.status(200).json({
+      status: 'success',
+      data: resources,
+    });
+
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const getProductById = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -37,3 +56,5 @@ export const getProductById = async (req, res, next) => {
     next(error);
   }
 };
+
+

@@ -1,6 +1,5 @@
-// components/assistant/MessageBubble.tsx
-
-type MessageBubbleProps = {
+// Chat message bubble with user/assistant styling
+interface MessageBubbleProps {
   message: string;
   sender: "user" | "assistant";
   onOptionClick?: (option: string) => void;
