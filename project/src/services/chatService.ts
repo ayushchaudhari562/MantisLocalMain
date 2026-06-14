@@ -16,7 +16,7 @@ export const chatService = {
     } catch {
       return {
         reply: 'I\'m currently unable to connect to the diagnostic engine. Please check your connection and try again.',
-        sessionId: sessionId || `session-${Date.now()}`,
+        sessionId: sessionId || null, // DO NOT generate a fake session string, it breaks the backend UUID type!
       };
     }
   },

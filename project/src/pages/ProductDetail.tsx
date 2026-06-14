@@ -151,7 +151,7 @@ function ProductDetail() {
             {/* Full chat link */}
             <Link
               to={`/products/${product.id}/chat`}
-              className="mt-8 inline-flex items-center gap-2 rounded-xl bg-[#111315] px-6 py-3 text-[14px] font-medium text-white transition hover:bg-black/80"
+              className="mt-8 flex w-full items-center justify-center gap-2 rounded-xl bg-[#111315] px-6 py-3 text-[14px] font-medium text-white transition hover:bg-black/80"
             >
               <MessageSquare className="h-4 w-4" />
               Open Full Chat Assistant
@@ -185,7 +185,7 @@ function ProductDetail() {
               resources.map((resource) => (
                 <div
                   key={resource.id}
-                  className="flex items-center justify-between rounded-2xl bg-[#F3F5F7] p-5 transition hover:bg-[#EEF2F5]"
+                  className="flex flex-col gap-4 rounded-2xl bg-[#F3F5F7] p-5 transition hover:bg-[#EEF2F5]"
                 >
                   <div>
                     <h3 className="text-[15px] font-medium text-[#111315]">
@@ -196,10 +196,15 @@ function ProductDetail() {
                       {resource.fileSize && ` · ${resource.fileSize}`}
                     </p>
                   </div>
-                  <button className="inline-flex items-center gap-2 rounded-xl border border-[rgba(96,117,138,0.1)] bg-white px-4 py-2 text-[13px] font-medium text-[#111315] transition hover:bg-[#F3F5F7]">
-                    Open
+                  <a 
+                    href={(resource as any).file_url || resource.url || '#'} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex w-full items-center justify-center gap-2 rounded-xl border border-[rgba(96,117,138,0.1)] bg-white px-4 py-3 text-[13px] font-medium text-[#111315] transition hover:bg-[#F3F5F7]"
+                  >
+                    Open Manual
                     <ArrowUpRight className="h-4 w-4" />
-                  </button>
+                  </a>
                 </div>
               ))
             )}
@@ -224,9 +229,9 @@ function ProductDetail() {
       </div>
 
       {/* Right column — sticky chat and diagnostics */}
-      <div className="space-y-6 lg:sticky lg:top-24 lg:h-[calc(100vh-7rem)]">
+      <div className="flex flex-col gap-6 lg:sticky lg:top-24 lg:h-[calc(100vh-7rem)]">
         {/* Chat assistant panel */}
-        <div className="h-[calc(100%-8rem)] min-h-[400px]">
+        <div className="flex-1 min-h-[400px]">
           <ChatWindow
             productId={product.id}
             productName={product.name}
@@ -234,7 +239,7 @@ function ProductDetail() {
         </div>
 
         {/* Diagnostic status card */}
-        <div className="rounded-3xl border border-[rgba(96,117,138,0.1)] bg-white p-6 shadow-soft-sm">
+        <div className="shrink-0 rounded-3xl border border-[rgba(96,117,138,0.1)] bg-white p-6 shadow-soft-sm">
           <div className="flex items-center gap-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F3F5F7]">
               <Wrench className="h-5 w-5 text-[#60758A]" />

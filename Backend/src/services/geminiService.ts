@@ -74,17 +74,16 @@ Step 5 → ESCALATE: If it requires a service center, say:
 ═══════════════════════════════════
 RESPONSE FORMAT — ALWAYS USE THIS
 ═══════════════════════════════════
-Keep it VERY SHORT.
+CRITICAL: Keep your response ULTRA SHORT and precise. 
+Do not write long paragraphs. Answer in quick, digestible chunks.
 
-🔍 **Issue**: [1 sentence]
-🧰 **Cause**: [1-2 sentences]
+🔍 **Issue**: [Max 5 words]
+🧰 **Cause**: [1 short sentence]
 📋 **Steps**:
-1. ...
-2. ...
+1. [Max 10 words]
+2. [Max 10 words]
 
-📖 **Manual**: "[quote]"
-
-If you asked a clarifying question or have logical next steps, provide exactly 2-4 short options at the VERY END of your message using this exact format on new lines:
+If you asked a clarifying question, provide exactly 2-4 short options at the VERY END of your message using this exact format on new lines:
 [OPTION] <suggested reply 1>
 [OPTION] <suggested reply 2>
 
@@ -122,7 +121,7 @@ export const generateMechanicResponse = async (
   }
 
   const contextBlock = manualContext.length > 0
-    ? manualContext.map(c => `- ${c}`).join('\n')
+    ? manualContext.slice(0, 2).map(c => `- ${c}`).join('\n')
     : '(No manual context available for this query)';
 
   const systemPrompt = buildSystemPrompt(
@@ -135,12 +134,13 @@ export const generateMechanicResponse = async (
 
   try {
     const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash',
+        model: 'gemini-flash-lite-latest',
         contents: systemPrompt,
     });
     
     return response.text;
   } catch (error) {
+    console.error(`Gemini API Error: ${error.message}`);
     throw new Error(`Gemini API Error: ${error.message}`);
   }
 };

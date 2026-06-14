@@ -82,11 +82,12 @@ function ProductChat() {
 
     try {
       const res = await chatService.sendMessage(id, content, sessionId);
-      if (!sessionId) setSessionId(res.sessionId);
+      const responseData = (res as any).data || res;
+      if (!sessionId && responseData.sessionId) setSessionId(responseData.sessionId);
       const aiMsg: ChatMessage = {
         id: `ai-${Date.now()}`,
         role: 'assistant',
-        content: res.reply,
+        content: responseData.content || (res as any).reply || "No response",
         createdAt: new Date().toISOString(),
       };
       setMessages((prev) => [...prev, aiMsg]);

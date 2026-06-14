@@ -1,8 +1,17 @@
 import multer from 'multer';
 import path from 'path';
 
-// Store files in memory so we don't save to the local disk
-const storage = multer.memoryStorage();
+// Store files on disk so they act as a physical hardcopy
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(process.cwd(), 'uploads'));
+  },
+  filename: (req, file, cb) => {
+    // Generate a unique filename to prevent overwriting
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
+  }
+});
 
 // Security: Validate file type and size
 const fileFilter = (req, file, cb) => {

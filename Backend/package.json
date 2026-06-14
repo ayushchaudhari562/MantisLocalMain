@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@clerk/clerk-react": "^5.61.8",
+    "@clerk/express": "^2.1.26",
     "@google/genai": "^2.8.0",
     "@supabase/supabase-js": "^2.108.1",
     "cors": "^2.8.6",

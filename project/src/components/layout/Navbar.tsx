@@ -2,16 +2,20 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Bot, ArrowRight, Menu, X } from 'lucide-react';
-import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
+import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from '@clerk/clerk-react';
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
 
+  const { user } = useUser();
+  const role = user?.unsafeMetadata?.role || 'user';
+
   // Navigation links
   const links = [
     { label: 'Products', path: '/products' },
-    { label: 'Dashboard', path: '/dashboard' },
+    // Only show Dashboard if user role is company
+    ...(role === 'company' ? [{ label: 'Dashboard', path: '/dashboard' }] : []),
   ];
 
   // Active route check

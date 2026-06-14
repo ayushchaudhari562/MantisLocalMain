@@ -127,7 +127,7 @@ export const getProductResources = async (
 ) => {
 
   const { data, error } = await supabase
-    .from('product_resources')
+    .from('resources')
     .select('*')
     .eq('product_id', productId)
     .order('created_at', {
@@ -147,4 +147,37 @@ export const getProductResources = async (
 
   return data;
 
+};
+
+// Update product
+export const updateProduct = async (id: string, productData: any) => {
+  const { data, error } = await supabase
+    .from('products')
+    .update(productData)
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) {
+    const err: any = new Error(error.message);
+    err.statusCode = 500;
+    throw err;
+  }
+  return data;
+};
+
+// Upload document
+export const uploadDocument = async (documentData: any) => {
+  const { data, error } = await supabase
+    .from('resources')
+    .insert([documentData])
+    .select()
+    .single();
+
+  if (error) {
+    const err: any = new Error(error.message);
+    err.statusCode = 500;
+    throw err;
+  }
+  return data;
 };

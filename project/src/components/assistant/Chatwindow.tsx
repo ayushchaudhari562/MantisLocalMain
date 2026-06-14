@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import MessageBubble from "./MessageBubble";
-import { sendChatMessage } from "../../api";
+import { chatService } from "../../services/chatService";
 
 interface ChatWindowProps {
   productId: string;
@@ -26,11 +26,19 @@ function ChatWindow({ productId, productName }: ChatWindowProps) {
     setIsLoading(true);
 
     try {
-      const response = await sendChatMessage(productId, userMsg, sessionId);
-      if (!sessionId && response.data?.sessionId) {
-        setSessionId(response.data.sessionId);
+      const response = await chatService.sendMessage(productId, userMsg, sessionId);
+      
+      // The backend returns { status: 'success', data: { sessionId, role, content } }
+      const responseData = (response as any).data || response;
+      
+      if (!sessionId && responseData.sessionId) {
+        setSessionId(responseData.sessionId);
       }
-      setMessages(prev => [...prev, { role: 'assistant', content: response.data.content }]);
+      
+      setMessages(prev => [...prev, { 
+        role: 'assistant', 
+        content: responseData.content || (response as any).reply || "No response" 
+      }]);
     } catch (error) {
       console.error(error);
       setMessages(prev => [...prev, { role: 'assistant', content: "Sorry, I encountered an error connecting to the AI." }]);
@@ -40,7 +48,7 @@ function ChatWindow({ productId, productName }: ChatWindowProps) {
   };
 
   return ( 
-    <div className="flex h-[760px] flex-col overflow-hidden rounded-[32px] border border-[#E4E7EB] bg-white shadow-[0_20px_80px_rgba(15,23,42,0.06)]">
+    <div className="flex h-full flex-col overflow-hidden rounded-[32px] border border-[#E4E7EB] bg-white shadow-[0_20px_80px_rgba(15,23,42,0.06)]">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-[#ECEFF3] px-6 py-5">
         <div>

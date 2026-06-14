@@ -1,6 +1,7 @@
 // User profile with owned products and maintenance records
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useUser } from '@clerk/clerk-react';
 import { User, Package, Calendar, ArrowUpRight } from 'lucide-react';
 import { userService } from '../services/userService';
 import { Skeleton } from '../components/ui/Skeleton';
@@ -14,11 +15,28 @@ import type {
 } from '../types';
 
 function Profile() {
+  const { user: clerkUser, isLoaded } = useUser();
   const [user, setUser] = useState<UserProfileType | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [records, setRecords] = useState<MaintenanceRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [isUpdatingRole, setIsUpdatingRole] = useState(false);
+
+  const handleRoleSwitch = async (role: 'user' | 'company') => {
+    if (!clerkUser) return;
+    try {
+      setIsUpdatingRole(true);
+      await clerkUser.update({
+        unsafeMetadata: { role }
+      });
+      window.location.reload(); // Reload to refresh navbar and routing logic
+    } catch (err) {
+      console.error('Failed to update role:', err);
+    } finally {
+      setIsUpdatingRole(false);
+    }
+  };
 
   // Fetch user data, products, and maintenance records
   const fetchData = () => {
@@ -74,11 +92,41 @@ function Profile() {
           </div>
           <div>
             <h1 className="text-2xl font-semibold text-[#111315]">
-              {user?.name || 'User'}
+              {user?.name || clerkUser?.fullName || 'User'}
             </h1>
             <p className="mt-1 text-[14px] text-[#60758A]">
-              {user?.email || ''}
+              {user?.email || clerkUser?.primaryEmailAddress?.emailAddress || ''}
             </p>
+            
+            {/* Role Switcher for Demo Purposes */}
+            <div className="mt-4 flex items-center gap-3 rounded-xl border border-[#ECEFF3] bg-[#F8FAFC] p-2">
+              <span className="text-[13px] font-medium text-[#60758A] ml-2">Role:</span>
+              <div className="flex gap-1">
+                <button
+                  onClick={() => handleRoleSwitch('user')}
+                  disabled={isUpdatingRole}
+                  className={`rounded-lg px-3 py-1.5 text-[13px] font-medium transition ${
+                    (!clerkUser?.unsafeMetadata?.role || clerkUser.unsafeMetadata.role === 'user')
+                      ? 'bg-white text-[#111315] shadow-sm'
+                      : 'text-[#60758A] hover:bg-white/50 hover:text-[#111315]'
+                  }`}
+                >
+                  User
+                </button>
+                <button
+                  onClick={() => handleRoleSwitch('company')}
+                  disabled={isUpdatingRole}
+                  className={`rounded-lg px-3 py-1.5 text-[13px] font-medium transition ${
+                    clerkUser?.unsafeMetadata?.role === 'company'
+                      ? 'bg-[#111315] text-white shadow-sm'
+                      : 'text-[#60758A] hover:bg-white/50 hover:text-[#111315]'
+                  }`}
+                >
+                  {isUpdatingRole ? 'Updating...' : 'Company'}
+                </button>
+              </div>
+            </div>
+            {/* End Role Switcher */}
           </div>
         </div>
 

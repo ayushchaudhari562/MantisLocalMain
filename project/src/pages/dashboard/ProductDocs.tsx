@@ -131,9 +131,14 @@ function ProductDocs() {
                 <div className="flex items-center gap-3">
                   <FileText className="h-5 w-5 text-[#60758A]" />
                   <div>
-                    <p className="text-[14px] font-medium text-[#111315]">
+                    <a 
+                      href={(doc as any).file_url || doc.url || '#'} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-[14px] font-medium text-[#111315] hover:underline"
+                    >
                       {doc.title}
-                    </p>
+                    </a>
                     <p className="text-[12px] text-[#60758A]">
                       {typeLabel(doc.type)}
                       {doc.fileSize && ` · ${doc.fileSize}`}

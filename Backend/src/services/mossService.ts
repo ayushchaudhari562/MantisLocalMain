@@ -173,11 +173,16 @@ export const indexChunks = async (productId: string, chunks: string[]) => {
 export const searchContext = async (productId: string, query: string) => {
   const indexName = `product_${productId.replace(/-/g, '')}`;
   
-  const result = await pool.send({
-    command: 'search',
-    index_name: indexName,
-    query
-  });
-  
-  return result.results || [];
+  try {
+    const result = await pool.send({
+      command: 'search',
+      index_name: indexName,
+      query
+    });
+    
+    return result.results || [];
+  } catch (error) {
+    console.error(`[MOSS] Query failed: ${error.message}. Falling back to Gemini's foundational knowledge.`);
+    return []; // Return empty context so chat doesn't crash
+  }
 };

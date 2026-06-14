@@ -4,6 +4,8 @@ import PublicLayout from '../layouts/PublicLayout';
 import DashboardLayout from '../layouts/DashboardLayout';
 import ProtectedRoute from '../components/auth/ProtectedRoute';
 
+import RoleProtectedRoute from '../components/auth/RoleProtectedRoute';
+
 // Public pages
 import Landing from '../pages/Landing';
 import Products from '../pages/Products';
@@ -30,7 +32,13 @@ function AppRoutes() {
       </Route>
 
       {/* Dashboard routes with sidebar layout */}
-      <Route element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
+      <Route element={
+        <ProtectedRoute>
+          <RoleProtectedRoute allowedRole="company">
+            <DashboardLayout />
+          </RoleProtectedRoute>
+        </ProtectedRoute>
+      }>
         <Route path="/dashboard" element={<DashboardOverview />} />
         <Route path="/dashboard/products" element={<DashboardProducts />} />
         <Route path="/dashboard/products/new" element={<ProductForm />} />
