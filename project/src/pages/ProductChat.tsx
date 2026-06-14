@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Send, Bot } from 'lucide-react';
-import { productService } from '../services/productService';
+import  productService  from '../services/productService';
 import { chatService } from '../services/chatService';
 import MessageBubble from '../components/assistant/MessageBubble';
 import { Skeleton } from '../components/ui/Skeleton';

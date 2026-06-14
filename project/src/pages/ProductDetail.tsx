@@ -8,7 +8,7 @@ import {
   ArrowUpRight,
   MessageSquare,
 } from 'lucide-react';
-import { productService } from '../services/productService';
+import  productService  from '../services/productService';
 import ChatWindow from '../components/assistant/Chatwindow';
 import { Skeleton } from '../components/ui/Skeleton';
 import ErrorState from '../components/ui/ErrorState';

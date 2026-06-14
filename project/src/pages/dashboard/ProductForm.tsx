@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Save } from 'lucide-react';
-import { productService } from '../../services/productService';
+import  productService from '../../services/productService';
 import { Skeleton } from '../../components/ui/Skeleton';
 import type { Product } from '../../types';
 

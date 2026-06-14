@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Plus, Search, Pencil, FileText, Trash2 } from 'lucide-react';
 import { dashboardService } from '../../services/dashboardService';
-import { productService } from '../../services/productService';
+import  productService  from '../../services/productService';
 import DataTable from '../../components/ui/DataTable';
 import Badge from '../../components/ui/Badge';
 import ErrorState from '../../components/ui/ErrorState';

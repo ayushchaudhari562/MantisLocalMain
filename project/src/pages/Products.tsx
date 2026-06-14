@@ -1,7 +1,7 @@
 // Products browsing page with search, loading, and error states
 import { useEffect, useMemo, useState } from 'react';
 import { Search, SlidersHorizontal } from 'lucide-react';
-import { productService } from '../services/productService';
+import  productService from '../services/productService';
 import { ProductCardSkeleton } from '../components/ui/Skeleton';
 import EmptyState from '../components/ui/EmptyState';
 import ErrorState from '../components/ui/ErrorState';

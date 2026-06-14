@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, FileText, Trash2 } from 'lucide-react';
 import { dashboardService } from '../../services/dashboardService';
-import { productService } from '../../services/productService';
+import  productService  from '../../services/productService';
 import FileUpload from '../../components/ui/FileUpload';
 import { Skeleton } from '../../components/ui/Skeleton';
 import ErrorState from '../../components/ui/ErrorState';
