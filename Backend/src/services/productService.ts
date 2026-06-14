@@ -1,59 +1,150 @@
 import { supabase } from '../config/supabase.js';
 
-export const createProduct = async (productData) => {
-  const { company_id, name, description } = productData;
-  
+// Create product
+export const createProduct = async (productData: any) => {
+
+  const {
+    company_id,
+    name,
+    description,
+  } = productData;
+
+  // Validate required fields
   if (!company_id || !name) {
-    const error = new Error('Company ID and Product Name are required');
+
+    const error: any = new Error(
+      'Company ID and Product Name are required'
+    );
+
     error.statusCode = 400;
+
     throw error;
+
   }
 
+  // Insert product into database
   const { data, error } = await supabase
     .from('products')
-    .insert([{ company_id, name, description }])
+    .insert([
+      {
+        company_id,
+        name,
+        description,
+      },
+    ])
     .select()
     .single();
 
+  // Handle database error
   if (error) {
-    const err = new Error(error.message);
+
+    const err: any = new Error(error.message);
+
     err.statusCode = 500;
+
     throw err;
+
   }
 
   return data;
+
 };
 
-export const getProducts = async (companyId) => {
-  let query = supabase.from('products').select('*');
-  
+// Get all products
+export const getProducts = async (
+  companyId?: string
+) => {
+
+  let query = supabase
+    .from('products')
+    .select('*');
+
+  // Filter by company if provided
   if (companyId) {
-    query = query.eq('company_id', companyId);
+
+    query = query.eq(
+      'company_id',
+      companyId
+    );
+
   }
 
-  const { data, error } = await query.order('created_at', { ascending: false });
+  const { data, error } = await query
+    .order('created_at', {
+      ascending: false,
+    });
 
+  // Handle database error
   if (error) {
-    const err = new Error(error.message);
+
+    const err: any = new Error(error.message);
+
     err.statusCode = 500;
+
     throw err;
+
   }
 
   return data;
+
 };
 
-export const getProductById = async (id) => {
+// Get single product
+export const getProductById = async (
+  id: string
+) => {
+
   const { data, error } = await supabase
     .from('products')
-    .select('*, companies(name)')
+    .select(`
+      *,
+      companies(name)
+    `)
     .eq('id', id)
     .single();
 
+  // Handle not found / database errors
   if (error) {
-    const err = new Error(error.message);
-    err.statusCode = error.code === 'PGRST116' ? 404 : 500; // PGRST116 is Supabase "not found"
+
+    const err: any = new Error(error.message);
+
+    err.statusCode =
+      error.code === 'PGRST116'
+        ? 404
+        : 500;
+
     throw err;
+
   }
 
   return data;
+
+};
+
+// Get product resources
+export const getProductResources = async (
+  productId: string
+) => {
+
+  const { data, error } = await supabase
+    .from('product_resources')
+    .select('*')
+    .eq('product_id', productId)
+    .order('created_at', {
+      ascending: false,
+    });
+
+  // Handle database error
+  if (error) {
+
+    const err: any = new Error(error.message);
+
+    err.statusCode = 500;
+
+    throw err;
+
+  }
+
+  return data;
+
 };

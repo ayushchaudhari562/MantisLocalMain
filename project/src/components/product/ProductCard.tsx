@@ -1,49 +1,65 @@
-// components/products/ProductCard.tsx
-import { Link } from "react-router-dom";
+// Product card with hover polish and image fallback
+import { Link } from 'react-router-dom';
+import { ArrowUpRight, FileText } from 'lucide-react';
+import type { Product } from '../../types';
 
-type ProductCardProps = {
-  id: number;
-  name: string;
-  category: string;
-  docs: number;
-  image: string;
-};
+interface ProductCardProps {
+  product: Product;
+}
 
-function ProductCard({ id, name, category, docs, image }: ProductCardProps) {
+function ProductCard({ product }: ProductCardProps) {
   return (
     <Link
-      to={`/products/${id}`}
-      className="group overflow-hidden rounded-xl border border-[#E2E5E9] bg-white transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(17,19,21,0.07)]"
+      to={`/products/${product.id}`}
+      className="group overflow-hidden rounded-3xl border border-[rgba(96,117,138,0.1)] bg-white transition duration-300 hover:-translate-y-1 hover:shadow-soft"
     >
-      {/* Image */}
-      <div className="h-[148px] overflow-hidden bg-[#F3F5F7]">
-        <img
-          src={image}
-          alt={name}
-          className="h-full w-full object-cover transition duration-400 group-hover:scale-[1.03]"
-        />
+      {/* Product image with fallback */}
+      <div className="relative h-[220px] overflow-hidden bg-[#F3F5F7]">
+        {product.image ? (
+          <img
+            src={product.image}
+            alt={product.name}
+            className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center">
+            <FileText className="h-12 w-12 text-[#60758A]/30" />
+          </div>
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/15 via-transparent to-transparent" />
+        <div className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-[11px] font-medium text-[#111315] backdrop-blur-sm">
+          AI Support
+        </div>
       </div>
 
-      {/* Body */}
-      <div className="px-4 pt-3.5">
-        <p className="text-[11px] tracking-[0.01em] text-[#60758A]">
-          {category}
+      {/* Card content */}
+      <div className="p-6">
+        {/* Category label */}
+        <p className="text-[12px] font-medium uppercase tracking-wide text-[#60758A]">
+          {product.category || 'Product'}
         </p>
-        <h3 className="mt-1.5 text-[15px] font-medium leading-snug text-[#111315]">
-          {name}
-        </h3>
-      </div>
 
-      {/* Footer */}
-      <div className="mt-3.5 flex items-center justify-between border-t border-[#F0F2F4] px-4 py-2.5">
-        <span className="text-[11.5px] text-[#60758A]">{docs} resources</span>
-        <div className="flex items-center gap-2">
-          <span className="rounded bg-[#E6F1FB] px-1.5 py-0.5 text-[10.5px] font-medium text-[#0C447C]">
-            AI support
-          </span>
-          <button className="rounded border border-[#D8DCE2] bg-[#d7e6f4] px-2.5 py-1 text-[11.5px] font-medium text-[#111315] transition hover:bg-[#E6E9EC]">
+        {/* Product name */}
+        <h3 className="mt-2 text-[20px] font-semibold tracking-tight text-[#111315]">
+          {product.name}
+        </h3>
+
+        {/* Description */}
+        <p className="mt-3 text-[14px] leading-relaxed text-[#60758A]">
+          {product.description ||
+            'Access manuals, troubleshooting help, and AI-powered diagnostic assistance.'}
+        </p>
+
+        {/* Card footer */}
+        <div className="mt-6 flex items-center justify-between border-t border-[#F3F5F7] pt-5">
+          <div className="flex items-center gap-2 text-[#60758A]">
+            <FileText className="h-4 w-4" />
+            <span className="text-[13px]">{product.docs || 0} resources</span>
+          </div>
+          <div className="flex items-center gap-2 text-[13px] font-medium text-[#111315]">
             Open
-          </button>
+            <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+          </div>
         </div>
       </div>
     </Link>
