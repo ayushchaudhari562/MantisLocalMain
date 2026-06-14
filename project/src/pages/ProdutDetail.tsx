@@ -1,11 +1,24 @@
 // pages/ProductDetail.tsx
 
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { getProduct } from "../api";
 import Navbar from "../components/layout/Navbar";
 import ChatWindow from "../components/assistant/Chatwindow";
 
 import { FileText, Wrench, ShieldCheck } from "lucide-react";
 
 function ProductDetail() {
+  const { id } = useParams();
+  const [product, setProduct] = useState<any>(null);
+
+  useEffect(() => {
+    if (id) {
+      getProduct(id).then(res => setProduct(res.data)).catch(console.error);
+    }
+  }, [id]);
+
+  if (!product) return <div className="p-20 text-center">Loading...</div>;
 return ( <div className="min-h-screen bg-[#F5F5F3] text-[#111315]">
 
 
@@ -40,11 +53,11 @@ return ( <div className="min-h-screen bg-[#F5F5F3] text-[#111315]">
             <div>
 
               <p className="text-sm text-[#7A8796]">
-                Scooter
+                {product.category || "Product"}
               </p>
 
               <h1 className="mt-2 text-5xl font-semibold tracking-tight text-[#111315]">
-                Honda Activa 6G
+                {product.name}
               </h1>
 
             </div>
@@ -239,7 +252,7 @@ return ( <div className="min-h-screen bg-[#F5F5F3] text-[#111315]">
     {/* RIGHT SIDE */}
     <div className="sticky top-24 h-fit">
 
-      <ChatWindow />
+      <ChatWindow productId={id!} productName={product.name} />
 
       {/* Diagnosis Status */}
       <div className="mt-6 rounded-[28px] border border-[#E4E7EB] bg-white p-6 shadow-sm">

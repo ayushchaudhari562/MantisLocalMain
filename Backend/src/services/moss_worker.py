@@ -4,7 +4,7 @@ import os
 import traceback
 
 try:
-    from moss import MossClient
+    from moss import MossClient, DocumentInfo
 except ImportError:
     print(json.dumps({"error": "inferedge-moss not installed globally or accessible"}))
     sys.exit(1)
@@ -24,27 +24,19 @@ except Exception as e:
 
 def upload_chunks(index_name, chunks):
     try:
-        # Assuming the standard Moss 1.4 API structure for insertion
-        # We pass documents as a list of dicts with a 'text' field
-        client.add(index_name=index_name, documents=[{"text": c} for c in chunks])
+        docs = [DocumentInfo(id=str(i), text=c) for i, c in enumerate(chunks)]
+        client.add_docs(name=index_name, docs=docs)
         return {"status": "success", "indexed": len(chunks)}
     except Exception as e:
         return {"error": f"Moss upload error: {str(e)}"}
 
 def search_moss(index_name, query):
     try:
-        results = client.query(index_name=index_name, query=query)
-        
-        # Format results nicely assuming they return an object/dict with a 'text' or 'content' property
+        results = client.query(name=index_name, query=query)
         texts = []
-        if isinstance(results, list):
-            for r in results:
-                if isinstance(r, dict):
-                    texts.append(r.get('text', str(r)))
-                elif hasattr(r, 'text'):
-                    texts.append(r.text)
-                else:
-                    texts.append(str(r))
+        if hasattr(results, 'docs'):
+            for d in results.docs:
+                texts.append(getattr(d, 'text', str(d)))
         return {"status": "success", "results": texts}
     except Exception as e:
         return {"error": f"Moss query error: {str(e)}"}

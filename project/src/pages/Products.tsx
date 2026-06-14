@@ -3,9 +3,17 @@
 import Navbar from "../components/layout/Navbar";
 import ProductCard from "../components/product/ProductCard";
 
-import { products } from "../lib/mockData";
+import { useEffect, useState } from "react";
+import { getProducts } from "../api";
 
 function Products() {
+  const [products, setProducts] = useState<any[]>([]);
+
+  useEffect(() => {
+    getProducts()
+      .then((res) => setProducts(res.data))
+      .catch(console.error);
+  }, []);
 return ( <div className="min-h-screen bg-[#F5F5F3] text-[#111315]">
 
 

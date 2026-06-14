@@ -1,8 +1,43 @@
 // components/assistant/ChatWindow.tsx
 
+import { useState } from "react";
 import MessageBubble from "./MessageBubble";
+import { sendChatMessage } from "../../api";
 
-function ChatWindow() {
+interface ChatWindowProps {
+  productId: string;
+  productName: string;
+}
+
+function ChatWindow({ productId, productName }: ChatWindowProps) {
+  const [messages, setMessages] = useState<{role: string, content: string}[]>([
+    { role: 'assistant', content: `Hi! I'm the ${productName} support assistant. Tell me what issue you're facing.` }
+  ]);
+  const [input, setInput] = useState("");
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSend = async () => {
+    if (!input.trim()) return;
+    
+    const userMsg = input.trim();
+    setInput("");
+    setMessages(prev => [...prev, { role: 'user', content: userMsg }]);
+    setIsLoading(true);
+
+    try {
+      const response = await sendChatMessage(productId, userMsg, sessionId);
+      if (!sessionId && response.data?.sessionId) {
+        setSessionId(response.data.sessionId);
+      }
+      setMessages(prev => [...prev, { role: 'assistant', content: response.data.content }]);
+    } catch (error) {
+      console.error(error);
+      setMessages(prev => [...prev, { role: 'assistant', content: "Sorry, I encountered an error connecting to the AI." }]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 return ( <div className="flex h-[760px] flex-col overflow-hidden rounded-[32px] border border-[#E4E7EB] bg-white shadow-[0_20px_80px_rgba(15,23,42,0.06)]">
 
 
@@ -16,7 +51,7 @@ return ( <div className="flex h-[760px] flex-col overflow-hidden rounded-[32px] 
       </p>
 
       <h2 className="mt-1 text-xl font-semibold text-[#111315]">
-        Honda Activa 6G
+        {productName}
       </h2>
 
     </div>
@@ -32,30 +67,14 @@ return ( <div className="flex h-[760px] flex-col overflow-hidden rounded-[32px] 
   {/* Chat Messages */}
   <div className="flex-1 space-y-4 overflow-y-auto bg-[#FCFCFB] px-6 py-6">
 
-    <MessageBubble
-      sender="user"
-      message="My scooter horn is not working."
-    />
-
-    <MessageBubble
-      sender="assistant"
-      message="Does the headlight function normally when the ignition is on?"
-    />
-
-    <MessageBubble
-      sender="user"
-      message="Yes, headlights are working properly."
-    />
-
-    <MessageBubble
-      sender="assistant"
-      message="Understood. The issue is likely isolated to the horn circuit. Please inspect Fuse F3 (10A) beneath the front panel."
-    />
-
-    <MessageBubble
-      sender="assistant"
-      message="Has any electrical repair or battery replacement been performed recently?"
-    />
+    {messages.map((msg, idx) => (
+      <MessageBubble
+        key={idx}
+        sender={msg.role}
+        message={msg.content}
+      />
+    ))}
+    {isLoading && <div className="text-sm text-gray-500 italic">Thinking...</div>}
 
   </div>
 
@@ -91,11 +110,17 @@ return ( <div className="flex h-[760px] flex-col overflow-hidden rounded-[32px] 
 
       <input
         type="text"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        onKeyDown={(e) => e.key === 'Enter' && handleSend()}
         placeholder="Describe your issue..."
         className="h-14 flex-1 rounded-full border border-[#D8DCE2] bg-[#F8F9FA] px-5 text-sm text-[#111315] outline-none placeholder:text-[#9BA6B2]"
       />
 
-      <button className="h-14 rounded-full bg-[#111315] px-6 text-sm font-medium text-white transition hover:bg-[#1B1D21]">
+      <button 
+        onClick={handleSend}
+        disabled={isLoading}
+        className="h-14 rounded-full bg-[#111315] px-6 text-sm font-medium text-white transition hover:bg-[#1B1D21] disabled:opacity-50">
 
         Send
 
