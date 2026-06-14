@@ -1,4 +1,6 @@
 import { Router } from 'express';
+import companyRoutes from './companyRoutes.js';
+import productRoutes from './productRoutes.js';
 
 const router = Router();
 
@@ -10,5 +12,9 @@ router.get('/health', (req, res) => {
     timestamp: new Date().toISOString()
   });
 });
+
+// Feature Routes
+router.use('/companies', companyRoutes);
+router.use('/products', productRoutes);
 
 export default router;
