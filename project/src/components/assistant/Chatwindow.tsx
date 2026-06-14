@@ -1,128 +1,177 @@
-// components/assistant/ChatWindow.tsx
+// Embedded chat assistant panel for product detail page
+import { useState, useRef, useEffect } from 'react';
+import { Bot, Send } from 'lucide-react';
+import { chatService } from '../../services/chatService';
+import MessageBubble from './MessageBubble';
+import type { ChatMessage, SuggestedPrompt } from '../../types';
 
-import MessageBubble from "./MessageBubble";
-
-type ChatWindowProps = {
+interface ChatWindowProps {
   productId: string;
   productName: string;
-};
+}
 
-function ChatWindow({
-  productId,
-  productName,
-}: ChatWindowProps) {
+function ChatWindow({ productId, productName }: ChatWindowProps) {
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [prompts, setPrompts] = useState<SuggestedPrompt[]>([]);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Initialize with welcome message
+  const [messages, setMessages] = useState<ChatMessage[]>([
+    {
+      id: `welcome-${Date.now()}`,
+      role: 'assistant',
+      content: `Hello! I can help diagnose issues related to your ${productName}.`,
+      createdAt: new Date().toISOString(),
+    },
+  ]);
+
+  // Load suggested prompts on mount
+  useEffect(() => {
+    chatService.getSuggestedPrompts(productId).then(setPrompts);
+  }, [productId]);
+
+  // Auto-scroll on new messages
+  useEffect(() => {
+    scrollRef.current?.scrollTo({
+      top: scrollRef.current.scrollHeight,
+      behavior: 'smooth',
+    });
+  }, [messages]);
+
+  // Send message to AI backend
+  const handleSend = async () => {
+    if (!input.trim() || loading) return;
+    const content = input.trim();
+    setInput('');
+    setLoading(true);
+
+    // Optimistic user message
+    setMessages((prev) => [
+      ...prev,
+      {
+        id: `user-${Date.now()}`,
+        role: 'user',
+        content,
+        createdAt: new Date().toISOString(),
+      },
+    ]);
+
+    try {
+      const res = await chatService.sendMessage(productId, content, sessionId);
+      if (!sessionId) setSessionId(res.sessionId);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `ai-${Date.now()}`,
+          role: 'assistant',
+          content: res.reply,
+          createdAt: new Date().toISOString(),
+        },
+      ]);
+    } catch {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `err-${Date.now()}`,
+          role: 'assistant',
+          content: 'Unable to connect to AI assistant.',
+          createdAt: new Date().toISOString(),
+        },
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-
-    <div className="flex h-full flex-col overflow-hidden rounded-3xl border border-[#60758A]/10 bg-white shadow-sm">
-
-      {/* Header */}
+    <div className="flex h-full flex-col overflow-hidden rounded-3xl border border-[rgba(96,117,138,0.1)] bg-white shadow-soft-sm">
+      {/* Chat header */}
       <div className="flex items-center justify-between border-b border-[#F3F5F7] px-6 py-5">
-
         <div>
-
-          <p className="text-[13px] font-medium text-[#60758A]">
-            Diagnostics
-          </p>
-
+          <p className="text-[13px] font-medium text-[#60758A]">Diagnostics</p>
           <h2 className="text-[15px] font-semibold text-[#111315]">
             {productName} Assistant
           </h2>
-
         </div>
-
         <div className="flex items-center gap-2 rounded-full bg-[#F3F5F7] px-3 py-1.5 text-[12px] font-medium text-[#60758A]">
-
-          <div className="h-2 w-2 rounded-full bg-[#111315]"></div>
-
-          Active
-
+          <div className="h-2 w-2 rounded-full bg-[#111315]" />
+          {loading ? 'Thinking...' : 'Active'}
         </div>
-
       </div>
 
-      {/* Chat Messages */}
-      <div className="flex-1 space-y-6 overflow-y-auto bg-[#F3F5F7]/30 px-6 py-6">
+      {/* Message list */}
+      <div
+        ref={scrollRef}
+        className="flex-1 space-y-6 overflow-y-auto bg-[#F3F5F7]/30 px-6 py-6 scrollbar-thin"
+      >
+        {messages.map((msg) => (
+          <MessageBubble
+            key={msg.id}
+            sender={msg.role}
+            message={msg.content}
+          />
+        ))}
 
-        <MessageBubble
-          sender="user"
-          message={`I am having an issue with my ${productName}.`}
-        />
-
-        <MessageBubble
-          sender="assistant"
-          message="Can you describe what issue you are facing?"
-        />
-
-        <MessageBubble
-          sender="user"
-          message="The horn is not working properly."
-        />
-
-        <MessageBubble
-          sender="assistant"
-          message="Does the headlight work when the ignition is on?"
-        />
-
-        <MessageBubble
-          sender="user"
-          message="Yes, headlights are working normally."
-        />
-
-        <MessageBubble
-          sender="assistant"
-          message="Please inspect Fuse F3 (10A) beneath the front panel. It controls the horn relay."
-        />
-
+        {/* Typing indicator */}
+        {loading && (
+          <div className="flex items-center gap-3">
+            <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#F3F5F7]">
+              <Bot className="h-3.5 w-3.5 text-[#60758A]" />
+            </div>
+            <div className="flex gap-1">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#60758A]" />
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#60758A] [animation-delay:150ms]" />
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#60758A] [animation-delay:300ms]" />
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Suggested Actions */}
-      <div className="border-t border-[#F3F5F7] bg-white px-6 py-4">
-
-        <p className="text-[12px] font-semibold uppercase tracking-wider text-[#60758A]">
-          Suggested Actions
-        </p>
-
-        <div className="mt-3 flex flex-wrap gap-2">
-
-          <button className="rounded-xl border border-[#60758A]/20 bg-[#F3F5F7] px-4 py-2 text-[13px] font-medium text-[#111315] transition hover:bg-[#E6E8EA]">
-
-            Show Fuse Diagram
-
-          </button>
-
-          <button className="rounded-xl border border-[#60758A]/20 bg-[#F3F5F7] px-4 py-2 text-[13px] font-medium text-[#111315] transition hover:bg-[#E6E8EA]">
-
-            Front Panel Access
-
-          </button>
-
+      {/* Suggested prompts */}
+      {messages.length <= 1 && prompts.length > 0 && (
+        <div className="border-t border-[#F3F5F7] bg-white px-6 py-4">
+          <p className="text-[12px] font-semibold uppercase tracking-wider text-[#60758A]">
+            Suggested
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {prompts.map((prompt) => (
+              <button
+                key={prompt.id}
+                onClick={() => setInput(prompt.text)}
+                className="rounded-xl border border-[rgba(96,117,138,0.2)] bg-[#F3F5F7] px-4 py-2 text-[13px] font-medium text-[#111315] transition hover:bg-[#E6E8EA]"
+              >
+                {prompt.text}
+              </button>
+            ))}
+          </div>
         </div>
+      )}
 
-      </div>
-
-      {/* Input Area */}
+      {/* Message input */}
       <div className="border-t border-[#F3F5F7] bg-white px-6 py-5">
-
         <div className="flex items-center gap-3">
-
           <input
             type="text"
-            placeholder={`Ask something about ${productName}...`}
-            className="h-12 flex-1 rounded-xl border border-[#60758A]/20 bg-[#F3F5F7] px-5 text-[14px] text-[#111315] outline-none transition placeholder:text-[#60758A] focus:border-[#111315]/30"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleSend();
+            }}
+            placeholder={`Ask about ${productName}...`}
+            className="h-12 flex-1 rounded-xl border border-[rgba(96,117,138,0.2)] bg-[#F3F5F7] px-5 text-[14px] text-[#111315] outline-none transition placeholder:text-[#60758A] focus:border-[#111315]/30"
           />
-
-          <button className="h-12 rounded-xl bg-[#111315] px-6 text-[14px] font-medium text-white transition hover:bg-black/80">
-
-            Send
-
+          <button
+            onClick={handleSend}
+            disabled={loading || !input.trim()}
+            className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#111315] text-white transition hover:bg-black/80 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <Send className="h-[18px] w-[18px]" />
           </button>
-
         </div>
-
       </div>
-
     </div>
-
   );
 }
 

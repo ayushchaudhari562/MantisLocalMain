@@ -1,5 +1,8 @@
 {
   "devDependencies": {
     "@types/node": "^25.9.3"
+  },
+  "dependencies": {
+    "@clerk/clerk-react": "^5.61.8"
   }
 }

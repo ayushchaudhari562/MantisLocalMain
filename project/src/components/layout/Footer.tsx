@@ -1,44 +1,53 @@
-// components/layout/Footer.tsx
+// Platform footer with navigation links
+import { Link } from 'react-router-dom';
+import { Bot } from 'lucide-react';
 
 function Footer() {
-return ( <footer className="bg-[#F3F5F7] border-t border-[#60758A]/10">
+  return (
+    <footer className="border-t border-[rgba(96,117,138,0.1)] bg-[#F3F5F7]">
+      <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-8 px-6 py-12 md:flex-row">
+        {/* Brand */}
+        <div>
+          <div className="flex items-center gap-2">
+            <Bot className="h-5 w-5 text-[#111315]" />
+            <span className="text-[15px] font-semibold text-[#111315]">
+              Mantis
+            </span>
+          </div>
+          <p className="mt-2 text-[14px] text-[#60758A]">
+            AI-powered product diagnostics.
+          </p>
+        </div>
 
-  <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-6 py-10 text-[14px] text-[#60758A] md:flex-row">
+        {/* Navigation */}
+        <div className="flex items-center gap-8 text-[14px] font-medium">
+          <Link
+            to="/products"
+            className="text-[#60758A] transition hover:text-[#111315]"
+          >
+            Products
+          </Link>
+          <Link
+            to="/dashboard"
+            className="text-[#60758A] transition hover:text-[#111315]"
+          >
+            Dashboard
+          </Link>
+          <Link
+            to="/profile"
+            className="text-[#60758A] transition hover:text-[#111315]"
+          >
+            Profile
+          </Link>
+        </div>
 
-    <div>
-
-      <h3 className="text-[15px] font-semibold text-[#111315]">
-        Mantis
-      </h3>
-
-      <p className="mt-2">
-        AI-powered product diagnostics.
-      </p>
-
-    </div>
-
-    <div className="flex items-center gap-8 font-medium">
-
-      <button className="transition hover:text-[#111315]">
-        Products
-      </button>
-
-      <button className="transition hover:text-[#111315]">
-        Diagnostics
-      </button>
-
-      <button className="transition hover:text-[#111315]">
-        Resources
-      </button>
-
-    </div>
-
-  </div>
-
-</footer>
-
-
-);
+        {/* Copyright */}
+        <p className="text-[13px] text-[#9BA6B2]">
+          © {new Date().getFullYear()} Mantis
+        </p>
+      </div>
+    </footer>
+  );
 }
 
 export default Footer;
