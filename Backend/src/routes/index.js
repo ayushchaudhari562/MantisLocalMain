@@ -13,8 +13,13 @@ router.get('/health', (req, res) => {
   });
 });
 
+import resourceRoutes from './resourceRoutes.js';
+import chatRoutes from './chatRoutes.js';
+
 // Feature Routes
 router.use('/companies', companyRoutes);
 router.use('/products', productRoutes);
+router.use('/resources', resourceRoutes);
+router.use('/chat', chatRoutes);
 
 export default router;
