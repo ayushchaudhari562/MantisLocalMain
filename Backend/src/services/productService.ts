@@ -2,24 +2,46 @@ import { supabase } from '../config/supabase.js';
 
 // Create product
 export const createProduct = async (productData: any) => {
-
   const {
     company_id,
     name,
     description,
+    category,
+    image,
+    status,
   } = productData;
 
-  // Validate required fields
-  if (!company_id || !name) {
+  let finalCompanyId = company_id;
 
+  // If company_id is missing, find the first available company or create a default one
+  if (!finalCompanyId) {
+    const { data: companies } = await supabase
+      .from('companies')
+      .select('id')
+      .limit(1);
+
+    if (companies && companies.length > 0) {
+      finalCompanyId = companies[0].id;
+    } else {
+      // Create a default company if none exists
+      const { data: newCompany } = await supabase
+        .from('companies')
+        .insert([{ name: 'Default Company' }])
+        .select()
+        .single();
+      if (newCompany) {
+        finalCompanyId = newCompany.id;
+      }
+    }
+  }
+
+  // Validate required fields
+  if (!finalCompanyId || !name) {
     const error: any = new Error(
       'Company ID and Product Name are required'
     );
-
     error.statusCode = 400;
-
     throw error;
-
   }
 
   // Insert product into database
@@ -27,9 +49,12 @@ export const createProduct = async (productData: any) => {
     .from('products')
     .insert([
       {
-        company_id,
+        company_id: finalCompanyId,
         name,
         description,
+        category,
+        image,
+        status: status || 'draft',
       },
     ])
     .select()

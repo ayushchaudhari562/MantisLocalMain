@@ -14,10 +14,12 @@ router.get('/health', (req, res) => {
 });
 
 import chatRoutes from './chatRoutes.js';
+import dashboardRoutes from './dashboardRoutes.js';
 
 // Feature Routes
 router.use('/companies', companyRoutes);
 router.use('/products', productRoutes);
 router.use('/chat', chatRoutes);
+router.use('/dashboard', dashboardRoutes);
 
 export default router;

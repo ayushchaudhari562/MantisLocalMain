@@ -178,9 +178,13 @@ function ProductDetail() {
           {/* Dynamic resources list */}
           <div className="mt-8 space-y-4">
             {resources.length === 0 ? (
-              <p className="text-[14px] text-[#60758A]">
-                No resources available for this product yet.
-              </p>
+              <a
+                href={`/products/${product.id}/upload`}
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#111315] px-6 py-3 text-[14px] font-medium text-white transition hover:bg-black/80"
+              >
+                Upload Manual
+                <ArrowUpRight className="h-4 w-4" />
+              </a>
             ) : (
               resources.map((resource) => (
                 <div
@@ -193,7 +197,7 @@ function ProductDetail() {
                     </h3>
                     <p className="mt-1 text-[13px] text-[#60758A]">
                       {resourceTypeLabel(resource.type)}
-                      {resource.fileSize && ` · ${resource.fileSize}`}
+                      {((resource as any).file_size || resource.fileSize) && ` · ${((resource as any).file_size || resource.fileSize)}`}
                     </p>
                   </div>
                   <a 

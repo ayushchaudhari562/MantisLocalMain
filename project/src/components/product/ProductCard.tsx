@@ -1,4 +1,5 @@
 // Product card with hover polish and image fallback
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowUpRight, FileText } from 'lucide-react';
 import type { Product } from '../../types';
@@ -8,29 +9,29 @@ interface ProductCardProps {
 }
 
 function ProductCard({ product }: ProductCardProps) {
+  const [imgError, setImgError] = useState(false);
+  const hasImage = Boolean(product.image && !imgError);
+
   return (
     <Link
       to={`/products/${product.id}`}
-      className="group overflow-hidden rounded-3xl border border-[rgba(96,117,138,0.1)] bg-white transition duration-300 hover:-translate-y-1 hover:shadow-soft"
+      className="group overflow-hidden rounded-3xl border border-[rgba(96,117,138,0.1)] bg-white transition duration-300 hover:-translate-y-1 hover:shadow-soft flex flex-col"
     >
-      {/* Product image with fallback */}
-      <div className="relative h-[220px] overflow-hidden bg-[#F3F5F7]">
-        {product.image ? (
+      {/* Product image (only rendered if valid) */}
+      {hasImage && (
+        <div className="relative h-[220px] shrink-0 overflow-hidden bg-[#F3F5F7]">
           <img
             src={product.image}
             alt={product.name}
+            onError={() => setImgError(true)}
             className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
           />
-        ) : (
-          <div className="flex h-full items-center justify-center">
-            <FileText className="h-12 w-12 text-[#60758A]/30" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/15 via-transparent to-transparent" />
+          <div className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-[11px] font-medium text-[#111315] backdrop-blur-sm">
+            AI Support
           </div>
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/15 via-transparent to-transparent" />
-        <div className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-[11px] font-medium text-[#111315] backdrop-blur-sm">
-          AI Support
         </div>
-      </div>
+      )}
 
       {/* Card content */}
       <div className="p-6">

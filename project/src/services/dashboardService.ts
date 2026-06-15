@@ -7,32 +7,20 @@ import { mockProducts, mockResources } from '../mock/products';
 export const dashboardService = {
   // Fetch dashboard summary stats
   async getStats(): Promise<DashboardStats> {
-    try {
-      const res = await api.get('/dashboard/stats');
-      return res.data;
-    } catch {
-      return mockDashboardStats;
-    }
+    const res = await api.get('/dashboard/stats');
+    return res.data;
   },
 
   // Fetch analytics cards
   async getAnalyticsCards(): Promise<AnalyticsCard[]> {
-    try {
-      const res = await api.get('/dashboard/analytics');
-      return res.data;
-    } catch {
-      return mockAnalyticsCards;
-    }
+    const res = await api.get('/dashboard/analytics');
+    return res.data;
   },
 
   // Fetch company products for management
   async getCompanyProducts(): Promise<Product[]> {
-    try {
-      const res = await api.get('/dashboard/products');
-      return res.data;
-    } catch {
-      return mockProducts;
-    }
+    const res = await api.get('/dashboard/products');
+    return res.data;
   },
 
   // Upload document for a product

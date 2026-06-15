@@ -141,7 +141,7 @@ function ProductDocs() {
                     </a>
                     <p className="text-[12px] text-[#60758A]">
                       {typeLabel(doc.type)}
-                      {doc.fileSize && ` · ${doc.fileSize}`}
+                      {((doc as any).file_size || doc.fileSize) && ` · ${((doc as any).file_size || doc.fileSize)}`}
                     </p>
                   </div>
                 </div>

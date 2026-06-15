@@ -14,7 +14,13 @@ const app = express();
 app.use(helmet({ crossOriginResourcePolicy: false })); // Security headers, tweaked to allow loading resources
 app.use(cors()); // Enable CORS for all routes
 app.use(express.json()); // Parse JSON bodies
-app.use(clerkMiddleware()); // Authenticate requests with Clerk
+
+if (process.env.CLERK_PUBLISHABLE_KEY && process.env.CLERK_SECRET_KEY) {
+  app.use(clerkMiddleware()); // Authenticate requests with Clerk
+} else {
+  console.warn('⚠️ Clerk environment variables (CLERK_PUBLISHABLE_KEY and/or CLERK_SECRET_KEY) are missing. Clerk middleware is bypassed.');
+}
+
 
 // Serve static files from the uploads directory
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));

@@ -1,10 +1,6 @@
 // Landing page with hero, features, workflow, stats, and CTA
 import { Link } from 'react-router-dom';
 import { ArrowRight, ShieldCheck, FileText, Wrench } from 'lucide-react';
-import StatsStrip from '../components/landing/Stats';
-import FeaturesGrid from '../components/landing/FeaturesGrid';
-import AIWorkflow from '../components/landing/AIworkflow';
-import CTASection from '../components/landing/CTASection';
 
 function Landing() {
   return (
@@ -140,17 +136,6 @@ function Landing() {
         </div>
       </section>
 
-      {/* Platform stats strip */}
-      <StatsStrip />
-
-      {/* Features bento grid */}
-      <FeaturesGrid />
-
-      {/* AI diagnostic workflow */}
-      <AIWorkflow />
-
-      {/* Call to action */}
-      <CTASection />
     </>
   );
 }
