@@ -1,5 +1,15 @@
 # 🔧 Mantis — Local Development Documentation
 
+---
+
+## 👥 Team S.O.S
+- **Ayush Chaudhary** (ayush.250101044@iiitbh.ac.in)
+- **Akarsh Pandey** (akarsh.250101017@iiitbh.ac.in)
+- **Sarthak Kapoor** (sarthak.250101131@iiitbh.ac.in)
+- **Shubham Kumar** (shubham.250101148@iiitbh.ac.in)
+
+---
+
 > **AI-Powered Product Diagnostic Assistant**
 > A multi-company RAG (Retrieval-Augmented Generation) chatbot marketplace where companies upload their product manuals and users get AI-powered diagnostic help, grounded exclusively in official documentation.
 
