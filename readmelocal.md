@@ -3,7 +3,7 @@
 ---
 
 ## 👥 Team S.O.S
-- **Ayush Chaudhary** (ayush.250101044@iiitbh.ac.in)
+- **Ayush Chaudhari** (ayush.250101044@iiitbh.ac.in)
 - **Akarsh Pandey** (akarsh.250101017@iiitbh.ac.in)
 - **Sarthak Kapoor** (sarthak.250101131@iiitbh.ac.in)
 - **Shubham Kumar** (shubham.250101148@iiitbh.ac.in)
